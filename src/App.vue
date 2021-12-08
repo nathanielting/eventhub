@@ -2,18 +2,45 @@
   <v-app>
 
     <v-navigation-drawer
-      v-model="drawer"
+      permanent
       app
+      expand-on-hover
     >
-      <!--  -->
+        <v-list>
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>mdi-calendar</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Event Info</v-list-item-title>
+          </v-list-item>
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>mdi-file-document-multiple</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Registrations</v-list-item-title>
+          </v-list-item>
+          <v-list-item link>
+            <v-list-item-icon>
+              <v-icon>mdi-account-plus</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>New Registration</v-list-item-title>
+          </v-list-item>
+        </v-list>
     </v-navigation-drawer>
+    <v-app-bar
+      app
+      dense
+      color="white"
+      elevate-on-scroll
+    >
+      <v-app-bar-title> {{ capitalize(modelTitle)}} </v-app-bar-title>
 
-    <v-app-bar app color="primary" dark>
-      <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+        <v-spacer></v-spacer>
 
-      <v-toolbar-title>{{ modelTitle }}</v-toolbar-title>
+        <v-btn icon>
+          <v-icon>mdi-account</v-icon>
+        </v-btn>
     </v-app-bar>
-
     <v-main>
       <router-view/>
     </v-main>
@@ -29,11 +56,6 @@ export default {
     drawer:null
   }),
 
-  props: ['title'],
-
-  created() {
-    console.log(this.title)
-  },
   computed: {
     modelName() {
       if ('model' in this.$route.params){
@@ -45,7 +67,7 @@ export default {
       if ('model' in this.$route.params){
         return `${this.$route.params.model} Viewer`
       }
-      return this.title
+      return "Generic Model Viewer"
     }
   },
 
