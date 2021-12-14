@@ -13,7 +13,7 @@
             </v-list-item-icon>
             <v-list-item-title>Event Info</v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="route_registrations()">
             <v-list-item-icon>
               <v-icon>mdi-file-document-multiple</v-icon>
             </v-list-item-icon>
@@ -33,7 +33,7 @@
       color="white"
       elevate-on-scroll
     >
-      <v-app-bar-title> {{ capitalize(modelTitle)}} </v-app-bar-title>
+      <v-app-bar-title> {{ modelTitle}} </v-app-bar-title>
 
         <v-spacer></v-spacer>
 
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+const utilModule = require('./components/util');
 
 export default {
   name: 'App',
@@ -65,16 +66,24 @@ export default {
     },
     modelTitle() {
       if ('model' in this.$route.params){
-        return `${this.$route.params.model} Viewer`
+        return `${utilModule.capitalize(this.$route.params.model)} Viewer`
       }
       return "Generic Model Viewer"
     }
   },
 
   methods: {
-    capitalize(word){
-        return word.charAt(0).toUpperCase()+word.slice(1)
-    },
+    route_registrations(){
+      if (this.modelName)
+      {
+        this.$router.push({name: 'list', params: {model: this.modelName}})
+                    .catch((error)=>{
+                      if (error.name !== 'NavigationDuplicated') {
+                        throw error;
+                      }
+                    })
+      }
+    }
   }
 };
 </script>

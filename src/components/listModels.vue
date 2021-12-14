@@ -44,9 +44,6 @@
       });
     },
     methods: {
-      capitalize(word){
-        return word.charAt(0).toUpperCase()+word.slice(1)
-      },
       deleteDocument(id){
         let apiURL = `http://localhost:4000/model/delete/${id}`;
         let indexOfArrayItem = this.Documents.findIndex(i => i._id === id);
