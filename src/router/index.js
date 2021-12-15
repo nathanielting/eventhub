@@ -34,11 +34,11 @@ const routes = [
   //   props: true,
   //   component: () => import('./components/createComponent')
   // },
-  // {
-  //   path: '/:model/edit/:id',
-  //   name: 'edit',
-  //   component: () => import('./components/editComponent')
-  // },
+  {
+    path: '/:model/edit/:id',
+    name: 'edit',
+    component: () => import('../components/editRegistration')
+  },
 ]
 
 const router = new VueRouter({
