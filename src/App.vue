@@ -19,7 +19,7 @@
             </v-list-item-icon>
             <v-list-item-title>Registrations</v-list-item-title>
           </v-list-item>
-          <v-list-item link>
+          <v-list-item link @click="route_create()">
             <v-list-item-icon>
               <v-icon>mdi-account-plus</v-icon>
             </v-list-item-icon>
@@ -77,6 +77,17 @@ export default {
       if (this.modelName)
       {
         this.$router.push({name: 'list', params: {model: this.modelName}})
+                    .catch((error)=>{
+                      if (error.name !== 'NavigationDuplicated') {
+                        throw error;
+                      }
+                    })
+      }
+    },
+    route_create(){
+      if (this.modelName)
+      {
+        this.$router.push({name: 'create', params: {model: this.modelName}})
                     .catch((error)=>{
                       if (error.name !== 'NavigationDuplicated') {
                         throw error;

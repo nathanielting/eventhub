@@ -28,12 +28,12 @@ const routes = [
     name: 'list',
     component: () => import('../components/listRegistrations')
   },
-  // {
-  //   path: '/:model/create',
-  //   name: 'create',
-  //   props: true,
-  //   component: () => import('./components/createComponent')
-  // },
+  {
+    path: '/:model/create',
+    name: 'create',
+    props: true,
+    component: () => import('../components/createRegistration')
+  },
   {
     path: '/:model/edit/:id',
     name: 'edit',
