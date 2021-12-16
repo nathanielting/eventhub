@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h3>Update Registration</h3>
+    <h3 class="mb-4">Update Registration</h3>
     <form-generator :schema="schema"
       v-model="genericObj"
       @submit="handleUpdateForm()">

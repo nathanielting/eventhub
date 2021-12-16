@@ -1,18 +1,17 @@
 <template>
   <v-form>
-    <div v-for="(field, index) in schema" :key="index">
-    <v-row no-gutters>
-      <v-col>
+    <div class="d-flex align-content-start flex-wrap">
+      <div v-for="(field, index) in schema" :key="index" width="200px">
         <component
           :is="field.fieldType"
           v-model="localFormData[field.name]"
           :name="field.name"
           :label="field.label"
           :options="field.options"
+          class="pa-2"
           >
         </component>
-      </v-col>
-    </v-row>
+      </div>
     </div>
     <v-row no-gutters>
       <v-col>
