@@ -1,0 +1,79 @@
+<template>
+  <v-card elevation="2" class="pa-4">
+    <v-card-title>
+      <v-text-field
+        label="Question"
+        v-model="localInputModel.label"
+        class="pa-2"
+        >
+      </v-text-field>
+    </v-card-title>
+    <v-card-text class="d-flex align-content-start flex-wrap">
+    <v-text-field
+      label="Column Header"
+      v-model="localInputModel.name"
+      hint="No spaces"
+      class="pa-2"
+      >
+    </v-text-field>
+
+    <v-select
+      label="Question Type"
+      v-model="localInputModel.fieldType"
+      :items="typeOptions"
+      class="pa-2"
+      >
+      <template v-slot:prepend-item>
+        <v-list-item disabled>
+          <v-list-item-content>
+            <v-list-item-title>
+              Please select one
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider class="mt-2"></v-divider>
+      </template>
+    </v-select>
+
+    <v-combobox
+      clearable
+      multiple
+      small-chips
+      v-model="localInputModel.options"
+      label="List Options"
+      v-show="localInputModel.fieldType==='SelectList'"
+      class="pa-2"
+      persistent-hint
+      hint="Enter text then hit [Tab] or [Enter]"
+      >
+    </v-combobox>
+  </v-card-text>
+  </v-card>
+</template>
+<script>
+
+  export default {
+    name: 'ModelInput',
+    props: ['value'],
+    data() {
+      return {
+        typeOptions: [
+          { text: "Text", value: "TextInput"},
+          { text: "Number", value: "NumberInput"},
+          { text: "List", value: "SelectList"}
+        ],
+        varTypes: ["String", "Number", "String"]
+      };
+    },
+    computed: {
+      localInputModel: {
+        get() {
+          return this.value
+        },
+        set(value) {
+          this.$emit('input', value)
+        }
+      }
+    }
+  }
+</script>

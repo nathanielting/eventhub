@@ -11,9 +11,14 @@ const routes = [
     component: Home
   },
   {
-    path: '/models',
-    name: 'Models',
+    path: '/events',
+    name: 'events',
     component: () => import('../components/listModels.vue')
+  },
+  {
+    path:'/events/create',
+    name: 'create_events',
+    component: () => import('../components/createEvent')
   },
   {
     path: '/about',
