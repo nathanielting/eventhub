@@ -1,4 +1,5 @@
 <template>
+  <v-container>
   <v-card elevation="2" class="pa-4">
     <v-card-title>
       <v-text-field
@@ -47,8 +48,33 @@
       hint="Enter text then hit [Tab] or [Enter]"
       >
     </v-combobox>
+    <v-btn
+      elevation="4"
+      fab
+      dark
+      color="red"
+      absolute
+      bottom right
+      @click="$emit('delete')"
+      >
+      <v-icon dark>mdi-minus</v-icon>
+    </v-btn>
   </v-card-text>
   </v-card>
+  <v-row justify="center">
+    <v-btn
+      elevation="4"
+      fab
+      dark
+      color="light-green"
+      bottom
+      class="mt-6"
+      @click="$emit('add')"
+      >
+      <v-icon dark>mdi-plus</v-icon>
+    </v-btn>
+  </v-row>
+  </v-container>
 </template>
 <script>
 
