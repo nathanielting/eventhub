@@ -1,9 +1,12 @@
 <template>
-  <v-form>
+  <v-form
+    ref="form"
+    >
     <div class="d-flex align-content-start flex-wrap">
       <v-text-field
         label="Name"
         v-model="localSchema.name"
+        :rules="nameRules"
         name="name"
         class="pa-2"
         >
@@ -12,7 +15,7 @@
         label="Collection Name"
         v-model="localSchema.collectionName"
         name="collectionName"
-        hint="No spaces"
+        :rules="collectionNameRules"
         class="pa-2"
         >
       </v-text-field>
@@ -26,6 +29,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
             v-model="localSchema.date"
+            :rules="dateRules"
             label="Event Date"
             readonly
             v-bind="attrs"
@@ -65,7 +69,7 @@
       </v-btn>
     </v-row>
     <div class="my-3">
-      <v-btn @click="$emit('submit')">
+      <v-btn @click="submit()">
         <slot name="submit">Submit</slot>
       </v-btn>
     </div>
@@ -82,6 +86,17 @@
     data() {
       return {
         datemenu: false,
+        nameRules: [
+          v => !!v || 'Name is required',
+        ],
+        collectionNameRules: [
+          v => !!v || 'Collection name is required',
+          v => v.length >= 5 || 'Collection name must be longer than 5 characters',
+          v => /^\w+$/.test(v) || 'No spaces or symbols',
+        ],
+        dateRules: [
+          v => !!v || 'Date is required',
+        ],
       }
     },
     methods: {
@@ -97,6 +112,10 @@
           options:[]
         };
         this.localSchema.model_schema.splice(index+1, 0, newQuestion);
+      },
+      submit() {
+        console.log(this.$refs.form.validate());
+        this.$emit('submit');
       }
     },
     computed: {

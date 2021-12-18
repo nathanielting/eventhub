@@ -5,6 +5,7 @@
       <v-text-field
         label="Question"
         v-model="localInputModel.label"
+        :rules="questionRules"
         class="pa-2"
         >
       </v-text-field>
@@ -13,6 +14,7 @@
     <v-text-field
       label="Column Header"
       v-model="localInputModel.name"
+      :rules="columnRules"
       hint="No spaces"
       class="pa-2"
       >
@@ -21,6 +23,7 @@
     <v-select
       label="Question Type"
       v-model="localInputModel.fieldType"
+      :rules="fieldTypeRules"
       :items="typeOptions"
       class="pa-2"
       @input="updateVarType()"
@@ -42,6 +45,7 @@
       multiple
       small-chips
       v-model="localInputModel.options"
+      :rules="optionRules"
       label="List Options"
       v-show="localInputModel.fieldType==='SelectList'"
       class="pa-2"
@@ -89,7 +93,20 @@
           { text: "Number", value: "NumberInput"},
           { text: "List", value: "SelectList"}
         ],
-        varTypes: ["String", "Number", "String"]
+        varTypes: ["String", "Number", "String"],
+        questionRules: [
+          v => !!v || 'Question is required',
+        ],
+        columnRules: [
+          v => !!v || 'Column header is required',
+          v => /^\w+$/.test(v) || 'No spaces or symbols',
+        ],
+        fieldTypeRules: [
+          v => !!v || 'Question Type is required',
+        ],
+        optionRules: [
+          v => this.localInputModel.fieldType!=='SelectList' || v.length >= 1 || 'Add at least one option',
+        ],
       };
     },
     methods: {
