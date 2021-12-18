@@ -114,8 +114,10 @@
         this.localSchema.model_schema.splice(index+1, 0, newQuestion);
       },
       submit() {
-        console.log(this.$refs.form.validate());
-        this.$emit('submit');
+        if(this.$refs.form.validate())
+        {
+          this.$emit('submit');
+        }
       }
     },
     computed: {
