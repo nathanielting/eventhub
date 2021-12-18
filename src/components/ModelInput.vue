@@ -23,6 +23,7 @@
       v-model="localInputModel.fieldType"
       :items="typeOptions"
       class="pa-2"
+      @input="updateVarType()"
       >
       <template v-slot:prepend-item>
         <v-list-item disabled>
@@ -90,6 +91,18 @@
         ],
         varTypes: ["String", "Number", "String"]
       };
+    },
+    methods: {
+      updateVarType() {
+        if (this.value.fieldType==="NumberInput")
+        {
+          this.value.type="Number";
+        }
+        else
+        {
+          this.value.type="String";
+        }
+      },
     },
     computed: {
       localInputModel: {
