@@ -17,7 +17,7 @@
           <td >{{doc["collectionName"]}}</td>
           <td >{{doc["date"]}}</td>
           <td>
-            <v-btn :to="{name: 'editModel', params: {id: doc._id }}" class="btn-success">Edit</v-btn>
+            <v-btn :to="{name: 'edit_event', params: {model: doc.name }}" class="btn-success">Edit</v-btn>
             <v-btn @click.prevent="deleteDocument(doc._id)" class="btn btn-danger">Delete</v-btn>
           </td>
         </tr>

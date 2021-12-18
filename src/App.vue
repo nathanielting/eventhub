@@ -7,7 +7,7 @@
       expand-on-hover
     >
         <v-list>
-          <v-list-item link>
+          <v-list-item link @click="route_event()">
             <v-list-item-icon>
               <v-icon>mdi-calendar</v-icon>
             </v-list-item-icon>
@@ -73,6 +73,17 @@ export default {
   },
 
   methods: {
+    route_event(){
+      if (this.modelName)
+      {
+        this.$router.push({name: 'edit_event', params: {model: this.modelName}})
+                    .catch((error)=>{
+                      if (error.name !== 'NavigationDuplicated') {
+                        throw error;
+                      }
+                    })
+      }
+    },
     route_registrations(){
       if (this.modelName)
       {

@@ -29,6 +29,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
   },
   {
+    path:'/:model/editEvent',
+    name: 'edit_event',
+    component: () => import('../components/editEvent')
+  },
+  {
     path: '/:model/',
     name: 'list',
     component: () => import('../components/listRegistrations')
