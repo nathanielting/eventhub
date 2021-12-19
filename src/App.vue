@@ -37,7 +37,7 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon>
+        <v-btn icon v-if="$auth.isAuthenticated" :to="{ name: 'profile' }">
           <v-icon>mdi-account</v-icon>
         </v-btn>
     </v-app-bar>
