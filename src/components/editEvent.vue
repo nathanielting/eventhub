@@ -31,18 +31,32 @@
     created() {
       this.modelName = this.$route.params.model
       let apiURL = process.env.VUE_APP_SERVER_URL + `/model/${this.modelName}`;
-      axios.get(apiURL).then((res) => {
-        this.schema = res.data[0]
-      })
+      this.$auth.getTokenSilently()
+      .then( token => {
+        axios.get(apiURL, {headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {
+          this.schema = res.data[0]
+        }).catch(error => {
+          console.log(error)
+        });
+      }).catch(error => {
+        console.log(error)
+      });
     },
     methods: {
       handleUpdateForm() {
         console.log(this.schema)
         let apiURL = process.env.VUE_APP_SERVER_URL + `/model/update/${this.schema._id}`;
 
-        axios.post(apiURL, this.schema).then((res) => {
-          console.log(res)
-          this.$router.push({name: 'events'})
+        this.$auth.getTokenSilently()
+        .then( token => {
+          axios.post(apiURL, this.schema, {headers: {Authorization: `Bearer ${token}`}})
+          .then((res) => {
+            console.log(res)
+            this.$router.push({name: 'events'})
+          }).catch(error => {
+            console.log(error)
+          });
         }).catch(error => {
           console.log(error)
         });

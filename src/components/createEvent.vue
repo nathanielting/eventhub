@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  // import axios from "axios";
+  import axios from "axios";
   import eventFormGenerator from "./eventFormGenerator";
 
   export default {
@@ -31,14 +31,20 @@
     methods: {
       handleUpdateForm() {
         console.log(this.schema)
-        // let apiURL = process.env.VUE_APP_SERVER_URL + `/model/create`;
+        let apiURL = process.env.VUE_APP_SERVER_URL + `/model/create`;
 
-        // axios.post(apiURL, this.schema).then((res) => {
-        //   console.log(res)
-        //   this.$router.push({name: 'events'})
-        // }).catch(error => {
-        //   console.log(error)
-        // });
+        this.$auth.getTokenSilently()
+        .then( token => {
+          axios.post(apiURL, this.schema, {headers: {Authorization: `Bearer ${token}`}})
+          .then((res) => {
+            console.log(res)
+            this.$router.push({name: 'events'})
+          }).catch(error => {
+            console.log(error)
+          });
+        }).catch(error => {
+          console.log(error)
+        });
       },
       deleteItem(index) {
         console.log("delete " + index)

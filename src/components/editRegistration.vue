@@ -25,9 +25,17 @@
       let apiURL = process.env.VUE_APP_SERVER_URL + `/${this.modelName}/edit/${this.$route.params.id}`;
       let modelURL = process.env.VUE_APP_SERVER_URL + `/model/${this.modelName}`;
 
-      axios.get(apiURL).then((res) => {
-        this.genericObj = res.data;
-      })
+      this.$auth.getTokenSilently()
+      .then( token => {
+        axios.get(apiURL, {headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {
+          this.genericObj = res.data;
+        }).catch(error => {
+          console.log(error)
+        });
+      }).catch(error => {
+        console.log(error)
+      });
       axios.get(modelURL).then((res) => {
         this.schema = res.data[0].model_schema;
       })
@@ -36,9 +44,15 @@
       handleUpdateForm() {
         let apiURL = process.env.VUE_APP_SERVER_URL + `/${this.modelName}/update/${this.$route.params.id}`;
 
-        axios.post(apiURL, this.genericObj).then((res) => {
-          console.log(res)
-          this.$router.push({name: 'list', params: {model: this.$route.params.model}})
+        this.$auth.getTokenSilently()
+        .then( token => {
+          axios.post(apiURL, this.genericObj, {headers: {Authorization: `Bearer ${token}`}})
+          .then((res) => {
+            console.log(res)
+            this.$router.push({name: 'list', params: {model: this.$route.params.model}})
+          }).catch(error => {
+            console.log(error)
+          });
         }).catch(error => {
           console.log(error)
         });

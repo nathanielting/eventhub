@@ -1,14 +1,21 @@
 const express = require('express');
+const { auth } = require("express-oauth2-jwt-bearer");
 const genericRoute = express.Router();
 const modelRoute = express.Router();
 let models = []
 // generic model module
 let genericModel = require('../models/Model');
+// Define middleware that validates incoming bearer access token JWTs
+const checkJwt = auth({
+  issuerBaseURL: "https://eventregistration.us.auth0.com",
+  audience: "express_mongodb"
+});
 
 let model_to_schema_agg = [
                             {
                               '$project': {
                                 'name': 1,
+                                'collectionName': 1,
                                 'model_schema': {
                                   '$map': {
                                     'input': '$model_schema',
@@ -33,6 +40,7 @@ let model_to_schema_agg = [
                             {
                               '$project': {
                                 'name': 1,
+                                'collectionName': 1,
                                 'schema': 1
                               }
                             }
@@ -41,7 +49,7 @@ let model_to_schema_agg = [
 function populateRoutes() {
   // add get function for all models
   // /model/
-  genericRoute.route('/').get((req, res) => {
+  genericRoute.route('/').get(checkJwt, (req, res) => {
       genericModel.model.find((error, data) => {
         if (error) {
           return next(error)
@@ -50,7 +58,7 @@ function populateRoutes() {
         }
       })
   })
-  genericRoute.route('/create').post((req, res, next) => {
+  genericRoute.route('/create').post(checkJwt, (req, res, next) => {
     // console.log(req.body)
     genericModel.model.create(req.body, (error, data) => {
       if (error) {
@@ -60,7 +68,7 @@ function populateRoutes() {
       }
     })
   });
-  genericRoute.route('/edit/:id').get((req, res) => {
+  genericRoute.route('/edit/:id').get(checkJwt, (req, res) => {
       genericModel.model.findById(req.params.id, (error, data) => {
         if (error) {
           return next(error)
@@ -69,7 +77,7 @@ function populateRoutes() {
         }
       })
   })
-  genericRoute.route('/update/:id').post((req, res, next) => {
+  genericRoute.route('/update/:id').post(checkJwt, (req, res, next) => {
     console.log(req.body)
     genericModel.model.findByIdAndUpdate(req.params.id, {
       $set: req.body
@@ -84,7 +92,7 @@ function populateRoutes() {
       }
     })
   })
-  genericRoute.route('/delete/:id').delete((req, res, next) => {
+  genericRoute.route('/delete/:id').delete(checkJwt, (req, res, next) => {
     genericModel.model.findByIdAndRemove(req.params.id, (error, data) => {
       if (error) {
         return next(error);
@@ -98,10 +106,12 @@ function populateRoutes() {
   for (var i = models.length - 1; i >= 0; i--) {
     let baseroute = '/'+models[i].collection.name+'/'
     let targetmodel = models[i]
-
+    console.log(baseroute)
     // /model/<model-name>
     genericRoute.route(baseroute).get((req, res) => {
-      genericModel.model.find({ name: targetmodel.collection.name }, (error, data) =>{
+      genericModel.model.find({ collectionName: targetmodel.collection.name }, (error, data) =>{
+        console.log(targetmodel.collection.name)
+        console.log(data)
         if (error) {
           return next(error)
         } else {
@@ -111,7 +121,7 @@ function populateRoutes() {
     })
 
     // /<model-name>/
-    modelRoute.route(baseroute).get((req, res) => {
+    modelRoute.route(baseroute).get(checkJwt, (req, res) => {
         targetmodel.find((error, data) => {
         if (error) {
           return next(error)
@@ -134,7 +144,7 @@ function populateRoutes() {
     });
 
     // /<model-name>/edit/:id
-    modelRoute.route(baseroute + 'edit/:id').get((req, res) => {
+    modelRoute.route(baseroute + 'edit/:id').get(checkJwt, (req, res) => {
       // console.log(req.body)
       targetmodel.findById(req.params.id, (error, data) => {
         if (error) {
@@ -146,7 +156,7 @@ function populateRoutes() {
     })
 
     // /<model-name>/update/:id
-    modelRoute.route(baseroute + 'update/:id').post((req, res, next) => {
+    modelRoute.route(baseroute + 'update/:id').post(checkJwt, (req, res, next) => {
       console.log(targetmodel.collection.name)
       console.log(req.body)
       targetmodel.findByIdAndUpdate(req.params.id, {
@@ -164,7 +174,7 @@ function populateRoutes() {
     })
 
     // /<model-name>/delete/:id
-    modelRoute.route(baseroute + 'delete/:id').delete((req, res, next) => {
+    modelRoute.route(baseroute + 'delete/:id').delete(checkJwt, (req, res, next) => {
       targetmodel.findByIdAndRemove(req.params.id, (error, data) => {
         if (error) {
           return next(error);

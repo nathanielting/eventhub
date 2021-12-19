@@ -4,6 +4,7 @@ let express = require('express'),
   database = require('./database'),
   bodyParser = require('body-parser')
   createError = require('http-errors');
+const { auth } = require("express-oauth2-jwt-bearer");
 
 // Connect mongoDB
 mongoose.Promise = global.Promise;
@@ -31,8 +32,18 @@ app.use(bodyParser.urlencoded({
 // enable cross origin resource sharing
 app.use(cors());
 
+// Define middleware that validates incoming bearer access token JWTs
+const checkJwt = auth({
+  issuerBaseURL: "https://eventregistration.us.auth0.com",
+  audience: "express_mongodb"
+});
+
 // wait for models to be created
 modelPromise.then( function(API){
+  app.use(function (req, res, next) {
+    console.log('%s %s %s', req.method, req.url, req.path)
+    next()
+  })
   app.use('/model', API.genericAPI)
   app.use('', API.modelAPI)
   // Create port

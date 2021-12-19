@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h3 class="text-center">{{capitalize(modelName)}}</h3>
+    <h3 class="text-center">{{capitalize(eventName)}}</h3>
     <v-data-table
       :headers="headers"
       :items="Documents"
@@ -39,7 +39,8 @@
         Documents: [],
         modelName: '',
         headers:[],
-        schema: []
+        schema: [],
+        eventName: ''
       }
     },
     created() {
@@ -48,14 +49,21 @@
       let modelURL = process.env.VUE_APP_SERVER_URL + `/model/${this.modelName}`;
 
       axios.get(modelURL).then((res) => {
+        this.eventName = res.data[0].name
         this.schema = res.data[0].model_schema;
         this.headers = utilModule.schemaHeaders(this.schema)
       }).catch(error => {
         console.log(error)
       });
 
-      axios.get(apiURL).then(res => {
-        this.Documents = res.data;
+      this.$auth.getTokenSilently()
+      .then( token => {
+        axios.get(apiURL, {headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {
+          this.Documents = res.data;
+        }).catch(error => {
+          console.log(error)
+        });
       }).catch(error => {
         console.log(error)
       });
@@ -72,8 +80,14 @@
         let indexOfArrayItem = this.Documents.findIndex(i => i._id === id);
 
         if (window.confirm("Do you really want to delete?")) {
-          axios.delete(apiURL).then(() => {
-            this.Documents.splice(indexOfArrayItem, 1);
+          this.$auth.getTokenSilently()
+          .then( token => {
+            axios.delete(apiURL, {headers: {Authorization: `Bearer ${token}`}})
+            .then(() => {
+              this.Documents.splice(indexOfArrayItem, 1);
+            }).catch(error => {
+              console.log(error)
+            });
           }).catch(error => {
             console.log(error)
           });

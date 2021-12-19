@@ -21,12 +21,14 @@ const routes = [
   {
     path: '/events',
     name: 'events',
-    component: () => import('../components/listModels.vue')
+    component: () => import('../components/listModels.vue'),
+    beforeEnter: authGuard
   },
   {
     path:'/events/create',
     name: 'create_events',
-    component: () => import('../components/createEvent')
+    component: () => import('../components/createEvent'),
+    beforeEnter: authGuard
   },
   {
     path: '/about',
@@ -39,12 +41,14 @@ const routes = [
   {
     path:'/:model/editEvent',
     name: 'edit_event',
-    component: () => import('../components/editEvent')
+    component: () => import('../components/editEvent'),
+    beforeEnter: authGuard
   },
   {
     path: '/:model/',
     name: 'list',
-    component: () => import('../components/listRegistrations')
+    component: () => import('../components/listRegistrations'),
+    beforeEnter: authGuard
   },
   {
     path: '/:model/create',
@@ -55,7 +59,8 @@ const routes = [
   {
     path: '/:model/edit/:id',
     name: 'edit',
-    component: () => import('../components/editRegistration')
+    component: () => import('../components/editRegistration'),
+    beforeEnter: authGuard
   },
 ]
 

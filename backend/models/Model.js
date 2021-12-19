@@ -17,7 +17,7 @@ let modelSchema = new Schema({
 module.exports = {
   model: mongoose.model('Model', modelSchema),
   createModel: function(model_json) {
-    let newSchema = new Schema(model_json.schema, {collection: model_json.name})
+    let newSchema = new Schema(model_json.schema, {collection: model_json.collectionName})
     return mongoose.model(model_json.name, newSchema)
   }
 }

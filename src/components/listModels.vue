@@ -17,7 +17,7 @@
           <td >{{doc["collectionName"]}}</td>
           <td >{{doc["date"]}}</td>
           <td>
-            <v-btn :to="{name: 'edit_event', params: {model: doc.name }}" class="btn-success">Edit</v-btn>
+            <v-btn :to="{name: 'edit_event', params: {model: doc.collectionName }}" class="btn-success">Edit</v-btn>
             <v-btn @click.prevent="deleteDocument(doc._id)" class="btn btn-danger">Delete</v-btn>
           </td>
         </tr>
@@ -37,8 +37,14 @@
     },
     created() {
       let apiURL = process.env.VUE_APP_SERVER_URL + `/model`;
-      axios.get(apiURL).then(res => {
-        this.Documents = res.data;
+      this.$auth.getTokenSilently()
+      .then( token => {
+        axios.get(apiURL, {headers: {Authorization: `Bearer ${token}`}})
+        .then(res => {
+          this.Documents = res.data;
+        }).catch(error => {
+          console.log(error)
+        });
       }).catch(error => {
         console.log(error)
       });
@@ -49,8 +55,14 @@
         let indexOfArrayItem = this.Documents.findIndex(i => i._id === id);
 
         if (window.confirm("Do you really want to delete?")) {
-          axios.delete(apiURL).then(() => {
-            this.Documents.splice(indexOfArrayItem, 1);
+          this.$auth.getTokenSilently()
+          .then( token => {
+            axios.delete(apiURL, {headers: {Authorization: `Bearer ${token}`}})
+            .then(() => {
+              this.Documents.splice(indexOfArrayItem, 1);
+            }).catch(error => {
+              console.log(error)
+            });
           }).catch(error => {
             console.log(error)
           });
