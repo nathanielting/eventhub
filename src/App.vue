@@ -7,19 +7,31 @@
       expand-on-hover
     >
         <v-list>
-          <v-list-item link @click="route_event()">
+          <v-list-item link :to="{name:'events'}">
+            <v-list-item-icon>
+              <v-icon>mdi-calendar-multiple</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>Events</v-list-item-title>
+          </v-list-item>
+          <v-list-item link :to="{name:'create_events'}" :disabled="inModel">
+            <v-list-item-icon>
+              <v-icon>mdi-calendar-plus</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title>New Event</v-list-item-title>
+          </v-list-item>
+          <v-list-item link @click="route_event()" :disabled="!inModel">
             <v-list-item-icon>
               <v-icon>mdi-calendar</v-icon>
             </v-list-item-icon>
-            <v-list-item-title>Event Info</v-list-item-title>
+            <v-list-item-title>Edit Event</v-list-item-title>
           </v-list-item>
-          <v-list-item link @click="route_registrations()">
+          <v-list-item link @click="route_registrations()" :disabled="!inModel">
             <v-list-item-icon>
               <v-icon>mdi-file-document-multiple</v-icon>
             </v-list-item-icon>
             <v-list-item-title>Registrations</v-list-item-title>
           </v-list-item>
-          <v-list-item link @click="route_create()">
+          <v-list-item link @click="route_create()" :disabled="!inModel">
             <v-list-item-icon>
               <v-icon>mdi-account-plus</v-icon>
             </v-list-item-icon>
@@ -58,6 +70,9 @@ export default {
   }),
 
   computed: {
+    inModel() {
+      return ('model' in this.$route.params);
+    },
     modelName() {
       if ('model' in this.$route.params){
         return this.$route.params.model
