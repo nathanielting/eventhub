@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "dev": "nodemon -r dotenv/config app.js dotenv_config_path=.env.local",
+    "prod": "nodemon -r dotenv/config app.js dotenv_config_path=.env.production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
