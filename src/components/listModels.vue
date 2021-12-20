@@ -1,28 +1,39 @@
 <template>
   <v-container>
     <h3 class="text-center">Events</h3>
-    <v-simple-table>
-      <thead>
-        <tr>
-          <!-- create list view with first three fields in schema -->
-          <th>Event Name</th>
-          <th>Collection Name</th>
-          <th>Date</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="doc in Documents" :key="doc._id">
-          <td >{{doc["name"]}}</td>
-          <td >{{doc["collectionName"]}}</td>
-          <td >{{doc["date"]}}</td>
-          <td>
-            <v-btn :to="{name: 'edit_event', params: {model: doc.collectionName }}" class="btn-success">Edit</v-btn>
-            <v-btn @click.prevent="deleteDocument(doc._id)" class="btn btn-danger">Delete</v-btn>
-          </td>
-        </tr>
-      </tbody>
-    </v-simple-table>
+    <v-data-table
+      :headers="headers"
+      :items="Documents"
+    >
+      <template v-slot:item.name="{ item }">
+        <v-chip
+          :to="{name: 'list', params: {model: item.collectionName}}"
+          outlined
+        >
+          {{item.name}}
+        </v-chip>
+      </template>
+      <template v-slot:item.actions="{ item }">
+        <v-btn
+          small
+          class="mr-2"
+          icon
+          :to="{name: 'edit_event', params: {model: item.collectionName}}"
+        >
+          <v-icon small>
+            mdi-pencil
+          </v-icon>
+        </v-btn>
+        <v-btn
+          small
+          class="mr-2"
+          icon
+          @click.prevent="deleteDocument(item._id)"
+          >
+          <v-icon small> mdi-delete </v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
   </v-container>
 </template>
 
@@ -33,6 +44,12 @@
     data() {
       return {
         Documents: [],
+        headers: [
+          {text: "Event Name", value: "name"},
+          {text: "Collection Name", value: "collectionName"},
+          {text: "Date", value: "date"},
+          {text: 'Actions', value: 'actions', sortable: false }
+        ]
       }
     },
     created() {
