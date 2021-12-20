@@ -1,14 +1,14 @@
 let express = require('express'),
   cors = require('cors'),
   mongoose = require('mongoose'),
-  database = require('./database'),
   bodyParser = require('body-parser')
   createError = require('http-errors');
 const { auth } = require("express-oauth2-jwt-bearer");
+// require('dotenv').config();
 
 // Connect mongoDB
 mongoose.Promise = global.Promise;
-mongoose.connect(database.db, {
+mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
